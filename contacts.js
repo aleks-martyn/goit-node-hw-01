@@ -16,7 +16,8 @@ const getContactById = async (contactId) => {
   const data = await fs.readFile(contactsPath);
   const result = JSON.parse(data);
   const contactById = result.filter((contact) => contact.id === contactId);
-  return console.table(contactById);
+
+  if (contactById.length > 0) console.table(contactById);
 };
 
 module.exports = {
