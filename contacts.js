@@ -36,6 +36,11 @@ function removeContact(contactId) {
       const contactIndex = contacts.findIndex(
         (contact) => contact.id === contactId
       );
+      if (contactIndex === -1) {
+        console.log("No such contact found");
+        return;
+      }
+
       const removedContact = contacts.splice(contactIndex, 1);
       if (removedContact.length > 0) console.table(removedContact);
       fs.writeFile(contactsPath, JSON.stringify(contacts));
@@ -61,12 +66,13 @@ function addContact(name, email, phone) {
       return JSON.parse(data);
     })
     .then((contacts) => {
-      console.log(contacts);
-      const updatedContacts = contacts.unshift(contact);
-      console.log(updatedContacts);
-      console.log(contact);
-      return contact;
-    });
+      contacts.unshift(contact);
+      const updatedContacts = JSON.stringify(contacts);
+      fs.writeFile(contactsPath, updatedContacts);
+    })
+    .catch((error) => console.log(error.message));
+
+  return contact;
 }
 
 module.exports = {
