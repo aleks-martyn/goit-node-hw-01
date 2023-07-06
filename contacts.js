@@ -12,15 +12,29 @@ function listContacts() {
     .catch((error) => console.log(error.message));
 }
 
-const getContactById = async (contactId) => {
-  const data = await fs.readFile(contactsPath);
-  const result = JSON.parse(data);
-  const contactById = result.filter((contact) => contact.id === contactId);
+function getContactById(contactId) {
+  fs.readFile(contactsPath)
+    .then((data) => {
+      return JSON.parse(data);
+    })
+    .then((result) => {
+      const contactById = result.filter((contact) => contact.id === contactId);
+      if (contactById.length > 0) console.table(contactById);
+    })
+    .catch((error) => console.log(error.message));
+}
 
-  if (contactById.length > 0) console.table(contactById);
-};
+function removeContact(contactId) { 
+  fs.readFile(contactsPath)
+    .then((data) => {
+      return JSON.parse(data);
+    })
+    .then()
+    .catch((error) => console.log(error.message));
+}
 
 module.exports = {
   listContacts,
   getContactById,
+  removeContact,
 };
