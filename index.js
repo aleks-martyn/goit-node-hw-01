@@ -1,2 +1,6 @@
-const { listContacts, getContactById, removeContact } = require("./contacts.js")
-console.log(getContactById('AeHIrLTr6JkxGE6SN-0Rw'));
+const { listContacts, getContactById, removeContact, addContact } = require("./contacts.js")
+removeContact("yOEaD2Vc5J4Hwnwc6JwXd")
+
+
+
+
