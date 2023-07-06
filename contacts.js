@@ -1,5 +1,6 @@
 const fs = require("fs/promises");
 const path = require("path");
+const nanoid = require("nanoid");
 
 const contactsPath = path.join("./db", "contacts.json");
 
@@ -8,7 +9,7 @@ function listContacts() {
     .then((data) => {
       return JSON.parse(data);
     })
-    .then((result) => console.table(result))
+    .then((contacts) => console.table(contacts))
     .catch((error) => console.log(error.message));
 }
 
@@ -17,24 +18,60 @@ function getContactById(contactId) {
     .then((data) => {
       return JSON.parse(data);
     })
-    .then((result) => {
-      const contactById = result.filter((contact) => contact.id === contactId);
+    .then((contacts) => {
+      const contactById = contacts.filter(
+        (contact) => contact.id === contactId
+      );
       if (contactById.length > 0) console.table(contactById);
     })
     .catch((error) => console.log(error.message));
 }
 
-function removeContact(contactId) { 
+function removeContact(contactId) {
   fs.readFile(contactsPath)
     .then((data) => {
       return JSON.parse(data);
     })
-    .then()
+    .then((contacts) => {
+      const contactIndex = contacts.findIndex(
+        (contact) => contact.id === contactId
+      );
+      const removedContact = contacts.splice(contactIndex, 1);
+      if (removedContact.length > 0) console.table(removedContact);
+      fs.writeFile(contactsPath, JSON.stringify(contacts));
+    })
     .catch((error) => console.log(error.message));
+}
+
+function addContact(name, email, phone) {
+  const contact = {
+    id: nanoid.nanoid().toString(),
+    name,
+    email,
+    phone,
+  };
+
+  if (name === undefined || email === undefined || phone === undefined) {
+    console.log("All arguments are required!");
+    return;
+  }
+
+  fs.readFile(contactsPath)
+    .then((data) => {
+      return JSON.parse(data);
+    })
+    .then((contacts) => {
+      console.log(contacts);
+      const updatedContacts = contacts.unshift(contact);
+      console.log(updatedContacts);
+      console.log(contact);
+      return contact;
+    });
 }
 
 module.exports = {
   listContacts,
   getContactById,
   removeContact,
+  addContact,
 };
