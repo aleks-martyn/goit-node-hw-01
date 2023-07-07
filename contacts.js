@@ -1,6 +1,6 @@
 const fs = require("fs/promises");
 const path = require("path");
-const nanoid = require("nanoid");
+const { nanoid } = require("nanoid");
 
 const contactsPath = path.join("./db", "contacts.json");
 
@@ -43,16 +43,16 @@ function removeContact(contactId) {
         return console.log(null);
       }
 
-      const removedContact = contacts.splice(contactIndex, 1);
-      if (removedContact.length > 0) console.table(removedContact);
-      fs.writeFile(contactsPath, JSON.stringify(contacts));
+      const [removedContact] = contacts.splice(contactIndex, 1);
+      fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
+      return console.log(removedContact);
     })
     .catch((error) => console.log(error.message));
 }
 
 function addContact(name, email, phone) {
-  const contact = {
-    id: nanoid.nanoid().toString(),
+  const newContact = {
+    id: nanoid().toString(),
     name,
     email,
     phone,
@@ -68,13 +68,12 @@ function addContact(name, email, phone) {
       return JSON.parse(data);
     })
     .then((contacts) => {
-      contacts.unshift(contact);
-      const updatedContacts = JSON.stringify(contacts);
-      fs.writeFile(contactsPath, updatedContacts);
+      contacts.push(newContact);
+      fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
     })
     .catch((error) => console.log(error.message));
 
-  return console.log(contact);
+  return console.log(newContact);
 }
 
 module.exports = {
