@@ -19,10 +19,12 @@ function getContactById(contactId) {
       return JSON.parse(data);
     })
     .then((contacts) => {
-      const contactById = contacts.filter(
-        (contact) => contact.id === contactId
-      );
-      if (contactById.length > 0) console.table(contactById);
+      const contactById = contacts.find((contact) => contact.id === contactId);
+      if (contactById) {
+        return console.log(contactById);
+      } else {
+        return console.log(null);
+      }
     })
     .catch((error) => console.log(error.message));
 }
@@ -38,7 +40,7 @@ function removeContact(contactId) {
       );
       if (contactIndex === -1) {
         console.log("No such contact found");
-        return;
+        return console.log(null);
       }
 
       const removedContact = contacts.splice(contactIndex, 1);
@@ -72,7 +74,7 @@ function addContact(name, email, phone) {
     })
     .catch((error) => console.log(error.message));
 
-  return contact;
+  return console.log(contact);
 }
 
 module.exports = {
